@@ -1,0 +1,7 @@
+# robots.txt for Dagger powered website
+
+User-agent: *
+Disallow: /lang/
+Disallow: /skins/
+Disallow: /etc/
+Disallow: /usr/

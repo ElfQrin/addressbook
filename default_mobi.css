@@ -1,0 +1,5 @@
+
+body { font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #000000; margin-left: 10px; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; }
+a { text-decoration: underline; }
+a:hover {color: #FF6666; }
+input { font-size: 12px; color: #000000; border: solid 1px #000000; }

@@ -1,0 +1,15 @@
+
+# Contact info submission
+
+url: /
+site_owner: Unlisted
+address1: Unlisted
+address2: 
+city: 
+state: 
+country: 
+postal_code: 
+phone_number: Unlisted
+display_email: Unlisted
+site_name: 
+site_description: 
