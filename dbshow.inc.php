@@ -63,8 +63,6 @@ echo '<input type="submit" name="cunstar" value="'.'Fav-'.'" /> ';
 $outfmt=strtolower(trim($_REQUEST['out'])); # Output format (webpage, webpage_list, raw, txt, html, xml, json, csv)
 $outwhr=strtolower(trim($_REQUEST['put'])); # Where to put the output (browser, dload)
 
-$q=addslashes(trim($_REQUEST['q']));
-
 if (!$action) {$action='view';} # Set default action
 if (($action=='view' && $functen['view']!=1) || ($action=='edit' && $functen['edit']!=1) || ($action=='export' && $functen['export']!=1)) {fdisabled(); die();}
 if ($action=='export' && !auth_user('EXPORT')) {authdenied(); die();}
@@ -190,11 +188,9 @@ if ($l_1b>'0' && substr($l_1['key'],0,2)!='xx') {$usrfld.=$l_1['key'].',';}
 $usrfld.='dat';
 
 $qusrch='';
-if (strlen($q)>=$srchqminlen) {
-$qusrch=' WHERE (LCASE(`lname`) LIKE "%'.strtolower($q).'%") OR (LCASE(`name`) LIKE "%'.strtolower($q).'%") OR (LCASE(`email`) LIKE "%'.strtolower($q).'%")'; # Search within lname, name, email
-}
+include('getdatasearch_1_form.inc.php');
 
-$_qusrt='';
+$qusrt='';
 
 if ($q && strlen($q)<$srchqminlen && ($outfmt=='webpage' || $outfmt=='webpage_list')) {echo 'You need to provide at least '.$srchqminlen.' characters to search into the database'."<br /><br />\n";}
 
@@ -206,17 +202,17 @@ $qdbs1='*';
 
 if ($starr) {
 if ($starrbl==1) {
-$_qusrt.=' ORDER BY `starr` DESC, `id` ASC';
+$qusrt.=' ORDER BY `starr` DESC, `id` ASC';
 } elseif ($starrbl==2) {
-$_qusrt.=' ORDER BY `starr` ASC, `id` ASC';
+$qusrt.=' ORDER BY `starr` ASC, `id` ASC';
 }
 } else {
-$_qusrt.=' ORDER BY `id` ASC';
+$qusrt.=' ORDER BY `id` ASC';
 }
 
 $qcnt='SELECT COUNT(*) AS c'." FROM `".$db_table1_name."`".$qusrch;
 $qdb='SELECT '.$qdbs1." FROM `".$db_table1_name."`".$qusrch;
-$qdb.=$_qusrt;
+$qdb.=$qusrt;
 if ($reslim) {$qdb.=" LIMIT ".$_frm.",".$itmppag;}
 $qdb.=';';
 # echo "<br />".'['.$qdb.']'."<br />";
