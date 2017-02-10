@@ -189,9 +189,10 @@ if ($l_1b>'0' && substr($l_1['key'],0,2)!='xx') {$usrfld.=$l_1['key'].',';}
 }
 $usrfld.='dat';
 
+$qusrch='';
 if (strlen($q)>=$srchqminlen) {
-$_qusrch=' WHERE (LCASE(`lname`) LIKE "%'.strtolower($q).'%") OR (LCASE(`name`) LIKE "%'.strtolower($q).'%") OR (LCASE(`email`) LIKE "%'.strtolower($q).'%")'; # Search within lname, name, email
-} else {$_qusrch='';}
+$qusrch=' WHERE (LCASE(`lname`) LIKE "%'.strtolower($q).'%") OR (LCASE(`name`) LIKE "%'.strtolower($q).'%") OR (LCASE(`email`) LIKE "%'.strtolower($q).'%")'; # Search within lname, name, email
+}
 
 $_qusrt='';
 
@@ -213,8 +214,8 @@ $_qusrt.=' ORDER BY `starr` ASC, `id` ASC';
 $_qusrt.=' ORDER BY `id` ASC';
 }
 
-$qcnt='SELECT COUNT(*) AS c'." FROM `".$db_table1_name."`".$_qusrch;
-$qdb='SELECT '.$qdbs1." FROM `".$db_table1_name."`".$_qusrch;
+$qcnt='SELECT COUNT(*) AS c'." FROM `".$db_table1_name."`".$qusrch;
+$qdb='SELECT '.$qdbs1." FROM `".$db_table1_name."`".$qusrch;
 $qdb.=$_qusrt;
 if ($reslim) {$qdb.=" LIMIT ".$_frm.",".$itmppag;}
 $qdb.=';';
