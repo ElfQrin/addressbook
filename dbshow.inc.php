@@ -14,7 +14,8 @@ $ou.='<td>';
 break;
 }
 $ou.='<input type="checkbox" name="'.'selitem[]'.'" value="'.$iid.'" />';
-$ou.=' '.'ID'.':'.$iid;
+# $ou.=' '.'ID'.':'.$iid;
+$ou.=' '.'<a href="'.'dbshowitem.php?action=edit&id='.$iid.'">'.'ID'.':'.$iid.'</a>';
 if (auth_user('DEL1')) {
 $ou.=' '.'<a href="'.'dbshow.php?action=edit&del='.$iid.'"';
 if ($askc_del1) {$ou.=' onclick="javascript:return confirm(\''.'Are you sure?'.'\');" ';}
