@@ -108,6 +108,7 @@ $fav=checkint($_GET['fav']);
 if ($fav) {
 if (auth_user('STAR1')) {
 $qdb="SELECT `starr` FROM `".$db_table1_name."` WHERE `id`=".$fav.";";
+# echo "<br />".'*** 1: ['.$qdb.']'."<br />";
 $dbo=dbx_query($dbx,$dbxcon,$qdb,$db_name);
 $row=dbx_fetch_array($dbx,$dbo);
 if ($row['starr']==0) {$xinv=1;} else {$xinv=0;}
@@ -202,12 +203,14 @@ $qdbs1='*';
 
 if ($starr) {
 if ($starrbl==1) {
-$qusrt.=' ORDER BY `starr` DESC, `id` ASC';
+$qusrt.=' ORDER BY `starr` DESC';
+if ($defsrt) {$qusrt.=', '.$defsrt;}
 } elseif ($starrbl==2) {
-$qusrt.=' ORDER BY `starr` ASC, `id` ASC';
+$qusrt.=' ORDER BY `starr` ASC';
+if ($defsrt) {$qusrt.=', '.$defsrt;}
 }
 } else {
-$qusrt.=' ORDER BY `id` ASC';
+if ($defsrt) {$qusrt.=' ORDER BY '.$defsrt;}
 }
 
 $qcnt='SELECT COUNT(*) AS c'." FROM `".$db_table1_name."`".$qusrch;

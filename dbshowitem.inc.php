@@ -7,7 +7,6 @@ $qdb='SELECT '.$qdbs1." FROM `".$db_table1_name."`"." WHERE `id`='".$id."' LIMIT
 $dbo=dbx_query($dbx,$dbxcon,$qdb,$db_name);
 if ($dbo) {
 include('dbshow_header.inc.php');
-
 $dbey=dbx_fetch_array($dbx,$dbo);
 $cp=1;
 include('dbshow_body.inc.php');
@@ -18,7 +17,7 @@ include('dbshow_footer.inc.php');
 if ($action=='edit') {
 $iid=$id;
 $ou='';
-$ou.=' '.'ID'.':'.$iid;
+# $ou.=' '.'ID'.':'.$iid;
 if (auth_user('DEL1')) {
 $ou.=' '.'<a href="'.'dbshow.php?action=edit&del='.$iid.'"';
 if ($askc_del1) {$ou.=' onclick="javascript:return confirm(\''.'Are you sure?'.'\');" ';}

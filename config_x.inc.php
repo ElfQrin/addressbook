@@ -78,6 +78,9 @@ $minimitems = array('name', 'lname', 'email'); # Compact view for Desktop device
 $minimitems = array('name', 'lname'); # Ultra compact view for Mobile devices
 }
 
+$defsrt='`lname`,`name`'; # Default sort order
+# $defsrt='`id`'; # Default sort order
+
 # min/max lenght of user profile text fields (make sure max values are not bigger than the ones defined in the database)
 $dbdatlen = array ('name'=>'0|128','lname'=>'0|128','address'=>'0|128','phonecell'=>'0|24','email'=>'5|128','www'=>'0|128');
 

@@ -1,10 +1,9 @@
 <?
-define('PAGETITLE','Address Book - Show');
+define('PAGETITLE','Archivum Cruces - Vedi oggetto');
 include('site_header.php');
 
-echo '<center>'.'<h1>'.'Show Item'.'</h1>'.'</center>';
+# echo '<center>'.'<h1>'.'Vedi oggetto'.'</h1>'.'</center>';
 
-$action='view';
 $outfmt='webpage';
 $outwhr='browser';
 
@@ -12,13 +11,15 @@ $outwhr='browser';
 $usrfld='id,';
 reset($dbdat);
 while ($l_1=each($dbdat)) {
-list ($l_1a,$l_1b) = $l_1['value'];
+list ($l_1a,$l_1b) = str_getcsv($l_1['value'],'|');
 if ($l_1b>'0' && substr($l_1['key'],0,2)!='xx') {$usrfld.=$l_1['key'].',';}
 }
 $usrfld.='dat';
+# $usrfld='*';
 $qdbs1=$usrfld;
 
 $id=addslashes(trim($_REQUEST['id']));
+$action=addslashes(trim($_REQUEST['action'])); if ($action!='edit') {$action='view';}
 
 include('dbshowitem.inc.php');
 
