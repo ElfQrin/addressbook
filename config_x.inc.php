@@ -95,6 +95,7 @@ $starrbl=1; # Starred items behavior when listed: 0: Unchanged, 1: Show first, 2
 
 $user_email=1;	# e-mail output format: 1 = normal, 2 = obfuscated
 
+$reslimdef=true; # Limit results per page
 $itmppagdef=10; # Items per page
 
 $srchqminlen=3; # Minimum length in characters of a search string

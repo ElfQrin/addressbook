@@ -67,7 +67,7 @@ $outwhr=strtolower(trim($_REQUEST['put'])); # Where to put the output (browser, 
 if (!$action) {$action='view';} # Set default action
 if (($action=='view' && $functen['view']!=1) || ($action=='edit' && $functen['edit']!=1) || ($action=='export' && $functen['export']!=1)) {fdisabled(); die();}
 if ($action=='export' && !auth_user('EXPORT')) {authdenied(); die();}
-if ($action=='export' || $outfmt=='raw') {$reslim=true;} else {$reslim=false;}
+if ($action=='export' || $outfmt=='raw') {$reslim=false;} else {$reslim=$reslimdef;}
 
 if (!$outfmt) {
 if ($action=='edit') {
@@ -243,6 +243,11 @@ if ($outwhr=='browser' && ($outfmt=='webpage' || $outfmt=='webpage_list')) {
 if ($qnr!=1) {$wxsp='entries';} else {$wxsp='entry';}; echo $qnr.' '.$wxsp.' '.'found'."<br />";
 # if ($dbn!=1) {$wxsp='entries';} else {$wxsp='entry';}; echo $dbn.' '.$wxsp.' '.'listed'."<br />";
 echo "<br />\n";
+}
+
+if ($reslim) {
+prpagnum($pag,$itmppag,$qnr,$pagurl,'?out='.$outfmt.'&put='.$outwhr.'&itmppag='.$itmppag.'&');
+echo "<br /><br />";
 }
 
 }
