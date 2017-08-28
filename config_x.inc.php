@@ -26,7 +26,9 @@ $edge_use_mcrypt=1;	# encryption type: 0=plain text (not recommended, deprecated
 $edge_mcrypt_password='mycryptpassword';	# this password is used for the alternate encryption algorithm as well
 $edge_servertz = 0;	# server timezone (UTC +/- ?); can be a float number example: -10, +3.5, EST = -6, GMT = 0, CET = 1, etc.
 // ini_set("SMTP","localhost"); ini_set("smtp_port",25);	# ini_set: overrides php.ini SMTP configuration
-
+$PHP_SELF = $_SERVER['PHP_SELF'];
+$REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
+# if ($_SERVER['HTTP_X_FORWARDED_FOR']!='') { $REMOTE_ADDR=$_SERVER['HTTP_X_FORWARDED_FOR']; } # get real IP address from proxies, when possible (on the other hand, this could return LAN IPs)
 
 # Directories
 $edge_servr='www.example.com';

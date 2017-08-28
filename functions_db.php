@@ -1,7 +1,7 @@
 <?
 
 # DBX Wrapper: MySQL, MySQLi, PostgreSQL, SQLite
-# By Valerio Capello ( http://labs.geody.com/ ) r2016-12-10 fr2016-09-21
+# By Valerio Capello ( http://labs.geody.com/ ) r2017-08-29 fr2016-09-21
 # License: GPL v3.0
 
 
@@ -120,6 +120,26 @@ $r=pg_num_rows($dbo);
 break;
 case 'sqlite':
 $r=sqlite_num_rows($dbo);
+break;
+}
+return $r;
+}
+
+function dbx_affected_rows($dbx,$dbxcon,$dbo) {
+$dbx=strtolower(trim($dbx));
+$r=false;
+switch ($dbx) {
+case 'mysql':
+$r=mysql_affected_rows();
+break;
+case 'mysqli':
+$r=mysqli_affected_rows($dbxcon);
+break;
+case 'postgresql':
+$r=pg_affected_rows($dbo);
+break;
+case 'sqlite':
+$r=sqlite_changes($dbxcon);
 break;
 }
 return $r;
