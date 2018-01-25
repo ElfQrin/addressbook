@@ -36,13 +36,13 @@ function codetext($text) {
 
 function authdenied($action='') {
 	global $es_accessdenied;
-	# echo '<p class="edgebig">';
+	echo '<p class="edgebig">';
 	switch($action) {
 		default:
 		lecho('access denied',$es_accessdenied);
 		break;
 	}
-	# echo '</p>';
+	echo '<p>';
 }
 
 function flecho($orig_text,$trans_text='') {
@@ -67,7 +67,7 @@ echo $a;
 }
 
 function incviewed($newsid) {
-	global $dbx, $dbxcon, $edge_database, $edge_database_auth;
+	global $dbx, $dbxcon, $dbxcon_aut, $edge_database, $edge_database_auth;
 	global $edge_id, $edge_logged;
 	global $edge_incviewsunreg;
 
@@ -81,12 +81,12 @@ function incviewed($newsid) {
 
 		if ($edge_id && $edge_logged) {
 			$_q = "SELECT lastviewed FROM people WHERE id = $edge_id";
-			$_r = dbx_query($dbx,$dbxcon,$_q,$edge_database_auth);
+			$_r = dbx_query($dbx,$dbxcon_aut,$_q,$edge_database_auth);
 			$_row = dbx_fetch_object($dbx,$_r);
 
 			if ($t > $_row->lastviewed + 60*5) {
 		                $_q = "UPDATE people SET lastviewed = $t WHERE id = $edge_id";
-		                dbx_query($dbx,$dbxcon,$_q,$edge_database_auth);
+		                dbx_query($dbx,$dbxcon_aut,$_q,$edge_database_auth);
 			}
 	        }
 	}
@@ -126,14 +126,14 @@ function checkstr($x) {
 function is_auth_valid_char($x) {
 global $edge_multibyte;
 if ($edge_multibyte) {return(1);}	# bad hack, need to check for proper characters for particular charset
-if (eregi("^[_\\.^0-9a-z-]+$",$x)) {return(1);} else {return(0);}	# allowed characters: 0-9, a-z, A-Z, _ . ^ -
+if (preg_match("/^[_\\.^0-9a-z-]+$/i",$x)) {return(1);} else {return(0);}	# allowed characters: 0-9, a-z, A-Z, _ . ^ -
 }
 
 function auth_validname($x) {
 global $edge_multibyte;
 if ($x == '?') {return(1);}
 if ($edge_multibyte) {return(1);}	# bad hack, need to check for proper characters for particular charset
-if (eregi("^[_\\.^0-9a-z-]+$",$x)) {return(1);} else {return(0);}	# allowed characters: 0-9, a-z, A-Z, _ . ^ -
+if (preg_match("/^[_\\.^0-9a-z-]+$/i",$x)) {return(1);} else {return(0);}	# allowed characters: 0-9, a-z, A-Z, _ . ^ -
 }
 
 # specific for travel.box.sk and other sites, currently, just being kept here for compatibility
@@ -150,37 +150,37 @@ global $dir_smileys;
 	$msgtxt = str_replace(":pimp", "<img src=\"".$dir_smileys."boss.gif\">", "$msgtxt");
 	$msgtxt = str_replace(":boss", "<img src=\"".$dir_smileys."boss.gif\">", "$msgtxt");
 
-	$msgtxt = ereg_replace("^:\(([[:space:]]*)", "<img src=\"".$dir_smileys."angry.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("^:-\(([[:space:]]*)", "<img src=\"".$dir_smileys."angry.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("^:P([[:space:]]*)", "<img src=\"".$dir_smileys."tongue.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("^:p([[:space:]]*)", "<img src=\"".$dir_smileys."tongue.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("^:D([[:space:]]*)", "<img src=\"".$dir_smileys."grin.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("^:\)([[:space:]]*)", "<img src=\"".$dir_smileys."smile.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("^:-\)([[:space:]]*)", "<img src=\"".$dir_smileys."smile.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/^:\(([[:space:]]*)/", "<img src=\"".$dir_smileys."angry.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/^:-\(([[:space:]]*)/", "<img src=\"".$dir_smileys."angry.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/^:P([[:space:]]*)/", "<img src=\"".$dir_smileys."tongue.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/^:p([[:space:]]*)/", "<img src=\"".$dir_smileys."tongue.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/^:D([[:space:]]*)/", "<img src=\"".$dir_smileys."grin.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/^:\)([[:space:]]*)/", "<img src=\"".$dir_smileys."smile.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/^:-\)([[:space:]]*)/", "<img src=\"".$dir_smileys."smile.gif\">\\1", "$msgtxt");
 
-	$msgtxt = ereg_replace("([[:space:]]):\($", "<img src=\"".$dir_smileys."angry.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):-\($", "<img src=\"".$dir_smileys."angry.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):P$", "<img src=\"".$dir_smileys."tongue.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):p$", "<img src=\"".$dir_smileys."tongue.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):D$", "<img src=\"".$dir_smileys."grin.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):\)$", "<img src=\"".$dir_smileys."smile.gif\">\\1", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):-\)$", "<img src=\"".$dir_smileys."smile.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):\($/", "<img src=\"".$dir_smileys."angry.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):-\($/", "<img src=\"".$dir_smileys."angry.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):P$/", "<img src=\"".$dir_smileys."tongue.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):p$/", "<img src=\"".$dir_smileys."tongue.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):D$/", "<img src=\"".$dir_smileys."grin.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):\)$/", "<img src=\"".$dir_smileys."smile.gif\">\\1", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):-\)$/", "<img src=\"".$dir_smileys."smile.gif\">\\1", "$msgtxt");
 
-	$msgtxt = ereg_replace("([[:space:]]):P([[:space:]])", "\\1<img src=\"".$dir_smileys."tongue.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):p([[:space:]])", "\\1<img src=\"".$dir_smileys."tongue.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):\)([[:space:]])", "\\1<img src=\"".$dir_smileys."smile.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):\(([[:space:]])", "\\1<img src=\"".$dir_smileys."angry.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):-\)([[:space:]])", "\\1<img src=\"".$dir_smileys."smile.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):-\(([[:space:]])", "\\1<img src=\"".$dir_smileys."angry.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]);\)([[:space:]])", "\\1<img src=\"".$dir_smileys."wink.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]);-\)([[:space:]])", "\\1<img src=\"".$dir_smileys."wink.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]])8-\)([[:space:]])", "\\1<img src=\"".$dir_smileys."cool.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]])8\)([[:space:]])", "\\1<img src=\"".$dir_smileys."cool.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]])R-\)([[:space:]])", "\\1<img src=\"".$dir_smileys."rolleyes.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]])R\)([[:space:]])", "\\1<img src=\"".$dir_smileys."rolleyes.gif\">\\2", "$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):D([[:space:]])", "\\1<img src=\"".$dir_smileys."grin.gif\">\\2","$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]):-D([[:space:]])", "\\1<img src=\"".$dir_smileys."grin.gif\">\\2","$msgtxt");
-	$msgtxt = ereg_replace("([[:space:]]);D([[:space:]])", "\\1<img src=\"".$dir_smileys."grin.gif\">\\2","$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):P([[:space:]])/", "\\1<img src=\"".$dir_smileys."tongue.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):p([[:space:]])/", "\\1<img src=\"".$dir_smileys."tongue.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):\)([[:space:]])/", "\\1<img src=\"".$dir_smileys."smile.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):\(([[:space:]])/", "\\1<img src=\"".$dir_smileys."angry.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):-\)([[:space:]])/", "\\1<img src=\"".$dir_smileys."smile.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):-\(([[:space:]])/", "\\1<img src=\"".$dir_smileys."angry.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]);\)([[:space:]])/", "\\1<img src=\"".$dir_smileys."wink.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]);-\)([[:space:]])/", "\\1<img src=\"".$dir_smileys."wink.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]])8-\)([[:space:]])/", "\\1<img src=\"".$dir_smileys."cool.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]])8\)([[:space:]])/", "\\1<img src=\"".$dir_smileys."cool.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]])R-\)([[:space:]])/", "\\1<img src=\"".$dir_smileys."rolleyes.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]])R\)([[:space:]])/", "\\1<img src=\"".$dir_smileys."rolleyes.gif\">\\2", "$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):D([[:space:]])/", "\\1<img src=\"".$dir_smileys."grin.gif\">\\2","$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):-D([[:space:]])/", "\\1<img src=\"".$dir_smileys."grin.gif\">\\2","$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]);D([[:space:]])/", "\\1<img src=\"".$dir_smileys."grin.gif\">\\2","$msgtxt");
 
 	$msgtxt = str_replace(":argh", "<img src=\"".$dir_smileys."argh.gif\">", "$msgtxt");
 	$msgtxt = str_replace(":banghead", "<img src=\"".$dir_smileys."banghead.gif\">", "$msgtxt");
@@ -245,7 +245,7 @@ global $dir_smileys;
 	$msgtxt = str_replace(':type', "<img src=\"".$dir_smileys."typecomp.gif\">","$msgtxt");
 
 # added by ElfQrin (01mar2008)
-	$msgtxt = ereg_replace("([[:space:]]):s([[:space:]])", "\\1<img src=\"".$dir_smileys."disappointed.gif\">\\2","$msgtxt");
+	$msgtxt = preg_replace("/([[:space:]]):s([[:space:]])/", "\\1<img src=\"".$dir_smileys."disappointed.gif\">\\2","$msgtxt");
 	$msgtxt = str_replace(':bloo', "<img src=\"".$dir_smileys."blush.gif\">","$msgtxt");
 
 	return($msgtxt);
@@ -288,22 +288,22 @@ function buildHyperlinks($string) {
 
 	$parts   = split("[[:space:]]", $string);
 #	$parts	 = explode(' ', $string);
-	for($i = 0; $i < sizeof($parts); $i++) {
-		if(eregi($httpurl, $parts[$i])) {
+	for ($i = 0; $i < sizeof($parts); $i++) {
+		if (preg_match('/'.$httpurl.'/i', $parts[$i])) {
 			$temp       = $parts[$i];
-			$parts[$i]  = eregi_replace($httpurl, "<a href=\"".$edge_main_url."redirect.php?\\1\" target=\"_blank\">", $parts[$i]);
+			$parts[$i]  = preg_replace('/'.$httpurl.'/i', "<a href=\"".$edge_main_url."redirect.php?\\1\" target=\"_blank\">", $parts[$i]);
 			$parts[$i] .= "$temp</a>";
 		}
 
-#		if(eregi($wwwsurl, $parts[$i])) {
+#		if (preg_match('/'.$wwwsurl.'/i', $parts[$i])) {
 #			$temp       = $parts[$i];
-#			$parts[$i]  = eregi_replace($wwwsurl, "\\2<a href=\"".$edge_main_url."redirect.php?http://\\3\" target=\"_blank\">", $parts[$i]);
+#			$parts[$i]  = preg_replace('/'.$wwwsurl.'/i', "\\2<a href=\"".$edge_main_url."redirect.php?http://\\3\" target=\"_blank\">", $parts[$i]);
 #			$parts[$i] .= "$temp</a>";
 #		}
 
-		if(eregi($mailurl, $parts[$i])) {
+		if (preg_match('/'.$mailurl.'/i', $parts[$i])) {
 			$temp       = $parts[$i];
-			$parts[$i]  = eregi_replace($mailurl, "<a href=\"mailto:\\1\">", $parts[$i]);
+			$parts[$i]  = preg_replace('/'.$mailurl.'/i', "<a href=\"mailto:\\1\">", $parts[$i]);
 			$parts[$i] .= "$temp</a>";
 		}
 	}
@@ -371,7 +371,7 @@ return $a;
 
 # from PHP man, by mimec at wp dot pl r26-Jun-2003-09:40
 function crypt_md5($str, $salt=null) {
-  if (!$salt) {$salt=md5(uniqid(rand(),1));}
+  if (!$salt) {$salt=md5(uniqid(mt_rand(),1));}
   $salt=substr($salt, 0, 8);
   return $salt.':'.md5($salt.$str);
 }
@@ -510,7 +510,8 @@ function codetag($txt, $typ='') {
 }
 
 function dispcomments($id,$short=false) {
-	global $edge_database, $dbxcon, $edge_main_url, $es_recentcom;
+	global $dbx, $dbxcon, $edge_database;
+	global $edge_main_url, $es_recentcom;
 
 	$q = "SELECT thread,id,dat,subj,meno FROM wb WHERE did = 'edge$id' AND thread = 0 AND hide = 0 ORDER BY dat DESC LIMIT 0,6";
 	$result = dbx_query($dbx,$dbxcon,$q,$edge_database);
@@ -536,12 +537,12 @@ function dispcomments($id,$short=false) {
 }
 
 function htmlspecialchars_mb($x) {
-global $edge_multibyte, $edge_charset;
-if ($edge_multibyte) {
-return(htmlspecialchars($x,ENT_COMPAT,$edge_charset));
-} else {
-return(htmlspecialchars($x));
-}
+	global $edge_multibyte, $edge_charset;
+
+	if ($edge_multibyte)
+		return(htmlspecialchars($x,ENT_COMPAT,$edge_charset));
+	else
+		return(htmlspecialchars($x));
 }
 
 function htmlentities_mb($x) {
@@ -554,17 +555,17 @@ function htmlentities_mb($x) {
 }
 
 function show_flag($user) {
-	global $dbx, $dbxcon, $edge_database_auth;
+	global $dbx, $dbxcon, $dbxcon_aut, $edge_database_auth;
 	global $edge_countryflags, $edge_main_url, $dir_inc, $dir_cflags;
 
     if ($edge_countryflags) {
 	$q = "SELECT ccode,COUNT(*) AS c FROM people_lastlogged WHERE login = '$user' ";
-	if ($r = dbx_query($dbx,$dbxcon,$q,$edge_database_auth))
+	if ($r = dbx_query($dbx,$dbxcon_aut,$q,$edge_database_auth))
 		$o = dbx_fetch_object($dbx,$r);
 
 	if ($o->c == 0) {
 		$q = "SELECT ccode FROM people WHERE login = '$user' ";
-		$r = dbx_query($dbx,$dbxcon,$q,$edge_database_auth);
+		$r = dbx_query($dbx,$dbxcon_aut,$q,$edge_database_auth);
 		$o = dbx_fetch_object($dbx,$r);
 	}
 	$ccod=$o->ccode;
@@ -589,12 +590,12 @@ function show_flag($user) {
 }
 
 function show_gender($user) {
-global $dbx, $dbxcon, $edge_database_auth;
+global $dbx, $dbxcon, $dbxcon_aut, $edge_database_auth;
 global $edge_showgend, $edge_main_url, $dir_skin;
 global $es_male, $es_female, $es_unspec;
 if ($edge_showgend) {
 $q = "SELECT gend FROM people WHERE login = '$user' ";
-$r = dbx_query($dbx,$dbxcon,$q,$edge_database_auth);
+$r = dbx_query($dbx,$dbxcon_aut,$q,$edge_database_auth);
 $row_user = dbx_fetch_object($dbx,$r);
 
 switch ($edge_showgend) {
@@ -640,10 +641,10 @@ if ($lnkprf==1) {echo '<a href="'.$edge_main_url.'user.php?name='.rawurlencode($
 
 # $mask format: &FN = First Name (name), &LN = Last Name (lname), &NK = Nick (login)
 if ($mask!='&NK' && (strpos($mask,'&FN')!==false || strpos($mask,'&LN')!==false)) {
-global $edge_database_auth,$dbxcon;
+global $dbx, $dbxcon, $dbxcon_aut, $edge_database_auth;
 
 $q_user = "SELECT name,lname,email FROM people WHERE login = '$nick' ";
-$result_user = dbx_query($dbx,$dbxcon,$q_user,$edge_database_auth);
+$result_user = dbx_query($dbx,$dbxcon_aut,$q_user,$edge_database_auth);
 $row_user = dbx_fetch_object($dbx,$result_user);
 $mask=str_replace('&FN',htmlspecialchars_mb($row_user->name),$mask);
 $mask=str_replace('&LN',htmlspecialchars_mb($row_user->lname),$mask);
@@ -729,7 +730,7 @@ function thpic($nam,$clicky=0,$w=-1,$h=-1) {
 
 # deletes given uploaded image file with its thumbnail as well
 function delupload($_realname,$typ=-1) {
-	global $edge_database, $dbxcon;
+	global $dbx, $dbxcon, $edge_database;
 	global $edge_uploaddir, $logthis, $edge_log;
 
 	# we assume substr($_realname,0,4) == 'orig'
@@ -768,19 +769,47 @@ logaction($edge_log,"picture (".$_tn.") del local_name=".$_realorigname." thumbn
 }
 
 function auth_user($clearance,$m='&') {
-global $edge_logged, $edge_privil;
+global $edge_logged,$edge_login,$edge_privil,$edge_level,$lvl_privil;
 $au=false; $cm=0;
 if ($clearance=='') {$au=true;}
 if (!$au && $edge_logged) {
 $privileges=$edge_privil;
 if ($privileges) {$_c='';} else {$_c=',';}
+$privileges.=$_c.$lvl_privil[$edge_level];
+# if ($privileges!='' || (strpos($clearance,'LV',0)+1)) {
 $lsclr=explode(',',$clearance); $lsprv=explode(',',$privileges);
 $mxclr=sizeof($lsclr);
 for ($i=0;$i<=$mxclr-1;$i++) {
 $cclr=$lsclr[$i];
+if (substr($cclr,0,2)=='LV') {
+# note that discriminating directly by user levels rather than privileges is deprecated although supported
+$_mod=substr($cclr,2,2); $_lv=substr($cclr,4,strlen($cclr));
+switch ($_mod) {
+case '==':
+if ($edge_level==$_lv) {$cm++;}
+break;
+case '>.':
+if ($edge_level>$_lv) {$cm++;}
+break;
+case '<.':
+if ($edge_level<$_lv) {$cm++;}
+break;
+case '>=':
+if ($edge_level>=$_lv) {$cm++;}
+break;
+case '<=':
+if ($edge_level<=$_lv) {$cm++;}
+break;
+case '!=':
+if ($edge_level!=$_lv) {$cm++;}
+break;
+}
+} else {
 if (array_search($cclr,$lsprv,true) || $cclr==$lsprv[0]) {$cm++;}
 }
+}
 if (($m=='&' && $cm==$mxclr) || ($m=='|' && $cm>0)) {$au=true;}
+# }
 }
 return($au);
 }
@@ -932,17 +961,17 @@ return $pos;
 }
 
 function usr_id2nick($id) {
-global $edge_database_auth,$dbxcon;
+global $dbx, $dbxcon, $dbxcon_aut, $edge_database_auth;
 $q = "SELECT login FROM `people` WHERE id = $id ";
-$result = dbx_query($dbx,$dbxcon,$q,$edge_database_auth);
+$result = dbx_query($dbx,$dbxcon_aut,$q,$edge_database_auth);
 $row = dbx_fetch_object($dbx,$result);
 return $row->login;
 }
 
 function usr_nick2id($nick) {
-global $edge_database_auth,$dbxcon;
+global $dbx, $dbxcon, $dbxcon_aut, $edge_database_auth;
 $q = "SELECT id FROM `people` WHERE login = '$nick' ";
-$result = dbx_query($dbx,$dbxcon,$q,$edge_database_auth);
+$result = dbx_query($dbx,$dbxcon_aut,$q,$edge_database_auth);
 $row = dbx_fetch_object($dbx,$result);
 return $row->id;
 }
@@ -1066,9 +1095,19 @@ $i=$mxf;
 return $txt;
 }
 
+function censorlink($txt,$x='###',$xurl=false,$xeml=false,$xphn=false) {
+if ($xeml) { $txt=preg_replace('/[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})/i',$x,$txt); }
+if ($xurl) {
+$txt=preg_replace('/([a-zA-Z]+:\/\/|www|web|ftp)+[0-9a-zA-Z;.\/?:@=_#&%~,+$]+/i',$x,$txt);
+# $txt=preg_replace('/\.[0-9a-zA-Z;.\/?:@=_%~,+$]+/i',$x,$txt); # removes also example.net and .example.net , but may break other words, especially in sentences with improper punctuation. However, # and & are removed from the RegEx to preserve emoticons.
+}
+if ($xphn) { $txt=preg_replace('/[0-9\ \-\.]{9,19}/i',$x,$txt); } # May lead to false positive and remove legit numbers too
+return $txt;
+}
+
 # Big Brother is watching your country
 function iptocountry($ip) {
-global $dbx,$dbxcon,$edge_database;
+global $dbx, $dbxcon, $edge_database;
 
 $c='00';
 
@@ -1082,7 +1121,7 @@ return $c;
 
 function isemail($email) {
 $email=trim($email);
-if (eregi("^[_\\.0-9a-z-]+@([_\\.0-9a-z-]+)+[a-z]{2,4}$",$email)) {$r=true;} else {$r=false;}
+if (preg_match("/^[_\\.0-9a-z-]+@([_\\.0-9a-z-]+)+[a-z]{2,4}$/i",$email)) {$r=true;} else {$r=false;}
 return $r;
 }
 
@@ -1092,27 +1131,27 @@ return $r;
 # $st = string to "U" = upper, "L" = lower, null=casesensitive
 # example: $pw=pwgen(8,true,null);
 function pwgen($digits,$c=false,$st=null) {
-  if (!ereg("^([4-9]|((1|2){1}[0-9]{1}))$",$digits)) # 4-29 chars allowed
+  if (!preg_match("/^([4-9]|((1|2){1}[0-9]{1}))$/",$digits)) # 4-29 chars allowed
      $digits=4;
   for(;;) {
      $pwd=null; $o=null;
      # Generates the password
      for ($x=0;$x<$digits;) {
-        $y = rand(1,1000);
-       if($y>350 && $y<601) $d=chr(rand(48,57));
-        if($y<351) $d=chr(rand(65,90));
-        if($y>600) $d=chr(rand(97,122));
+        $y = mt_rand(1,1000);
+       if($y>350 && $y<601) $d=chr(mt_rand(48,57));
+        if($y<351) $d=chr(mt_rand(65,90));
+        if($y>600) $d=chr(mt_rand(97,122));
         if($d!=$o) {
          $o=$d; $pwd.=$d; $x++;
         }
      }
      # if you want that the user will not be confused by O or 0 ("Oh" or "Null") or 1 or l ("One" or "L"), set $c=true;
      if($c) {
-        $pwd=eregi_replace("(l|i)","1",$pwd);
-        $pwd=eregi_replace("(o)","0",$pwd);
+        $pwd=preg_replace("/(l|i)/i",'1',$pwd);
+        $pwd=preg_replace("/(o)/i",'0',$pwd);
      }
     # If the PW fits your purpose (e.g. this regexpression) return it, else make a new one (You can change this regular-expression how you want ....)
-    if(ereg("^[a-zA-Z]{1}([a-zA-Z]+[0-9][a-zA-Z]+)+",$pwd))
+    if(preg_match("/^[a-zA-Z]{1}([a-zA-Z]+[0-9][a-zA-Z]+)+/",$pwd))
       break;
   }
   if ($st=="L") {$pwd=strtolower($pwd);} elseif ($st=="U") {$pwd=strtoupper($pwd);}
@@ -1174,10 +1213,11 @@ $dbr=dbx_fetch_array($dbx,$dbo);
 return $dbr;
 }
 
-# if (auth_user('AUS')) {$uau4=true;} else {$uau4=false;}
 function auth_usrvw($f) {
-global $row_user,$edge_logged,$edge_login,$edge_privil,$edge_level,$lvl_privil,$usrprof;
-if ($edge_logged && $edge_login==$name) {$uau3=true;} else {$uau3=false;}
+global $edge_logged, $uau3;
+global $row_user;
+global $usrprof;
+global $edge_login,$edge_privil,$edge_level,$lvl_privil;
 if (auth_user('AUS')) {$uau4=true;} else {$uau4=false;}
 $v=FALSE;
 list ($l_1a,$l_1b) = explode('|',$usrprof[$f]);
@@ -1203,7 +1243,7 @@ function auth_usrrg($f) {
 global $usrprof;
 $v=FALSE;
 list ($l_1a) = explode('|',$usrprof[$f]);
-if ($l_1a>0) {$v=TRUE;}
+if ($l_1a>0) {$v=true;}
 return $v;
 }
 

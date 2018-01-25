@@ -84,7 +84,7 @@ if ($outfmt=='raw') {$outfmt='txt';} # You may want to use "raw" for testing pur
 if (!$pag) {$pag=$_GET['pag'];}
 if (!$pag || $pag<1) {$pag=1;}
 if (!$itmppag) {$itmppag=$_GET['itmppag'];}
-if (!eregi("^[0-9]+$",$itmppag)) {$itmppag=$itmppagdef;} # Prevents MySQL injection
+if (!preg_match("/^[0-9]+$/i",$itmppag)) {$itmppag=$itmppagdef;} # Prevents MySQL injection
 if (!$itmppag || $itmppag<1 || $itmppag>=$itmppagdef) {$itmppag=$itmppagdef;}
 # $itmppag=3; # Force items per page
 

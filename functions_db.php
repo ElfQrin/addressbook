@@ -1,7 +1,7 @@
 <?
 
 # DBX Wrapper: MySQL, MySQLi, PostgreSQL, SQLite
-# By Valerio Capello ( http://labs.geody.com/ ) r2017-08-29 fr2016-09-21
+# By Valerio Capello ( http://labs.geody.com/ ) r2018-01-23 fr2016-09-21
 # License: GPL v3.0
 
 
@@ -70,7 +70,7 @@ function dbx_close($dbx,$dbxcon) {
 $dbx=strtolower(trim($dbx));
 switch ($dbx) {
 case 'mysql':
-dbx_close($dbx,$dbxcon);
+mysql_close($dbxcon);
 break;
 case 'mysqli':
 mysqli_close($dbxcon);
@@ -268,6 +268,26 @@ break;
 return $r;
 }
 
+function dbx_free_result($dbx,$dbo) {
+$dbx=strtolower(trim($dbx));
+$r=false;
+switch ($dbx) {
+case 'mysql':
+$r=mysql_free_result($dbo);
+break;
+case 'mysqli':
+$r=mysqli_free_result($dbo);
+break;
+case 'postgresql':
+$r=pg_free_result($dbo);
+break;
+case 'sqlite':
+$r=true;
+break;
+}
+return $r;
+}
+
 function dbx_last_error($dbx,$dbxcon) {
 $dbx=strtolower(trim($dbx));
 switch ($dbx) {
@@ -304,6 +324,44 @@ $r=sqlite_libversion($dbxcon);
 break;
 }
 return $r;
+}
+
+# Requires dbx_query, dbx_fetch_array
+function dbx_sel_rand($dbx,$dbxcon,$db_name,$db_table,$idfield,$numel=1,$condit='',$order='') {
+if ($condit) {$conditq=' WHERE ('.$condit.')';}
+$qdb='SELECT COUNT(*) as c FROM `'.$db_table.'`'.$conditq.' ;';
+# echo '['.$qdb.']'."<br />\n";
+$dbo=dbx_query($dbx,$dbxcon,$qdb,$db_name);
+if ($dbo) {$row=dbx_fetch_array($dbx,$dbo);} else {$row=array('c'=>0);}
+# echo 'Total Rows'.': '.$row['c']."<br /><br />\n";
+
+if ($row['c']>$numel*2) {
+# echo '<b>'.'Method: Alt'.'</b>'."<br />\n";
+
+if ($condit) {$conditq=' && ('.$condit.')';}
+$qdb='SELECT `'.$idfield.'` FROM `'.$db_table.'` WHERE RAND(now())*'.$row['c'].'<'.($numel*2).$conditq.' ORDER BY RAND(now()) LIMIT '.$numel.' ;';
+# $qdb='SELECT `'.$idfield.'` FROM `'.$db_table.'`'.$conditq.' ORDER BY RAND(now()) LIMIT '.$numel.' ;';
+# echo '[1:'.$qdb.']'."<br />\n";
+$dbo=dbx_query($dbx,$dbxcon,$qdb,$db_name);
+$ids='';
+while ($row=dbx_fetch_array($dbx,$dbo)) {
+if ($ids) {$ids.=','.$row[$idfield];} else {$ids=$row[$idfield];}
+}
+
+if ($order!=='') {$order=' ORDER BY '.$order;}
+$qdb='SELECT * FROM  `'.$db_table.'` WHERE `'.$idfield.'` IN('.$ids.')'.$order.' ;';
+# echo '[1b:'.$qdb.']'."<br />\n";
+$dbo=dbx_query($dbx,$dbxcon,$qdb,$db_name);
+
+} else {
+# echo '<b>'.'Method: Org'.'</b>'."<br />\n";
+if ($order!=='') {$order=','.$order;}
+$qdb='SELECT * FROM `'.$db_table.'`'.$conditq.' ORDER BY RAND(now())'.$order.' LIMIT '.$numel.' ;';
+# echo '[2:'.$qdb.']'."<br />\n";
+$dbo=dbx_query($dbx,$dbxcon,$qdb,$db_name);
+}
+
+return $dbo;
 }
 
 # Connect to the Database: $dbxcon=dbx_connect($dbx,$db_host,$db_user,$db_pwd,$db_name);

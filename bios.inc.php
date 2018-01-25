@@ -7,6 +7,7 @@ include('functions.php');
 include('functions_db.php');
 
 $dbxcon=dbx_connect($dbx,$db_host,$db_user,$db_pwd,$db_name);
+$dbxcon_aut=$dbxcon; # $dbxcon_aut=dbx_connect($dbx,$db_host,$db_user,$db_pwd,$db_name_auth);
 
 header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
 header("Pragma: no-cache"); // HTTP 1.0
