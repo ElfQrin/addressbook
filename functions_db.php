@@ -1,7 +1,7 @@
-<?
+<?php
 
 # DBX Wrapper: MySQL, MySQLi, PostgreSQL, SQLite
-# By Valerio Capello ( http://labs.geody.com/ ) r2018-01-23 fr2016-09-21
+# By Valerio Capello ( http://labs.geody.com/ ) r2023-08-01 fr2016-09-21
 # License: GPL v3.0
 
 
@@ -56,7 +56,7 @@ break;
 return $r;
 }
 
-function dbx_connect_pt($dbx,$db_host,$db_port=false,$db_user,$db_pwd,$db_name='') {
+function dbx_connect_pt($dbx,$db_host,$db_port,$db_user,$db_pwd,$db_name='') {
 $dbx=strtolower(trim($dbx));
 if ($db_port!==false) {
 $r=dbx_connect($dbx,$db_host.':'.$db_port,$db_user,$db_pwd,$db_name);
